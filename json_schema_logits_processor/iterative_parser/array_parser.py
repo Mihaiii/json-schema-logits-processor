@@ -15,14 +15,7 @@ def is_valid_array(
         if char == '[':
             state.string_index += 1
             state.value_stack.append('[')
-            return IterativeParserResult(
-                valid=True,
-                complete=False,
-                string_index=state.string_index,
-                schema_id=schema.items,
-                next_state=0,
-                value_stack=state.value_stack,
-            )
+            continue
 
         if char == ']':
             state.string_index += 1
@@ -39,6 +32,15 @@ def is_valid_array(
 
         if char == ',':
             state.string_index += 1
+            if state.string_index >= len(json_str) or json_str[state.string_index].isspace() or json_str[state.string_index] in [']', ',']:
+                return IterativeParserResult(
+                    valid=False,
+                    complete=False,
+                    string_index=state.string_index,
+                    schema_id=schema.id,
+                    next_state=0,
+                    value_stack=state.value_stack,
+                )
             continue
 
         # Validate the item within the array
