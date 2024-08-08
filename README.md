@@ -14,10 +14,9 @@ Includes a method for validating partial JSON against a given schema.
 The main class in this tool is JsonSchemaLogitsProcessor. An instance of this class can be created with a JsonSchema object and a PreTrainedTokenizer object.
 
 ```python
-from json_schema_logits_processor.schema import JsonSchema
+from json_schema_logits_processor.schema.interative_schema import JsonSchema, parse_schema_from_string
 from transformers import PreTrainedTokenizer
 from json_schema_logits_processor.json_schema_logits_processor import JsonSchemaLogitsProcessor
-from json_schema_logits_processor.schema import parse_schema_from_string
 
 schema = parse_schema_from_string(
     '{"type": "object", "properties": {"a": {"type": "string"}}}'
