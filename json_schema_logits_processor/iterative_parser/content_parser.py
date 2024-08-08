@@ -1,18 +1,12 @@
 from transformers.utils.import_utils import lru_cache
 
-from json_schema_logits_processor.iterative_parser.enum_parser import \
-    is_valid_enum
-from json_schema_logits_processor.iterative_parser.object_parser import \
-    is_valid_object
-from json_schema_logits_processor.iterative_parser.string_parser import \
-    is_valid_string
-from json_schema_logits_processor.iterative_parser.array_parser import \
-    is_valid_array
-from json_schema_logits_processor.iterative_parser.types import \
-    IterativeParserResult
+from json_schema_logits_processor.iterative_parser.enum_parser import is_valid_enum
+from json_schema_logits_processor.iterative_parser.object_parser import is_valid_object
+from json_schema_logits_processor.iterative_parser.string_parser import is_valid_string
+from json_schema_logits_processor.iterative_parser.types import IterativeParserResult
 from json_schema_logits_processor.schema.interative_schema import (
-    EnumJsonSchema, JsonSchema, ObjectJsonSchema, SchemaId, StringJsonSchema, ArrayJsonSchema)
-
+    EnumJsonSchema, JsonSchema, ObjectJsonSchema, SchemaId, StringJsonSchema, ArrayJsonSchema
+)
 
 def parse_partial_json_value(
     root_string: str,
@@ -32,7 +26,6 @@ def parse_partial_json_value(
         )
     out = _parse_one_token(root_string + next_token, penultimate_state, schema)
     return out.valid, out.complete and out.schema_id == SchemaId(0)
-
 
 @lru_cache(maxsize=1_000_000)
 def _parse_partial_json_value(
@@ -54,11 +47,12 @@ def _parse_partial_json_value(
     new_result = _parse_one_token(json_str, previous_result, schema)
     return new_result
 
-
 @lru_cache(maxsize=1_000_000)
 def _parse_one_token(
     json_str: str, state: IterativeParserResult, schema: JsonSchema
 ) -> IterativeParserResult:
+    from json_schema_logits_processor.iterative_parser.array_parser import is_valid_array
+
     curr_schema = schema[state.schema_id]
     if state.complete:
         if curr_schema.parent_id is None:  # root node

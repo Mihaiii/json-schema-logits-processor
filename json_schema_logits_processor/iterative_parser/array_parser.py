@@ -1,10 +1,11 @@
 from json_schema_logits_processor.iterative_parser.types import IterativeParserResult
 from json_schema_logits_processor.schema.interative_schema import ArrayJsonSchema, JsonSchema, SchemaId
-from json_schema_logits_processor.iterative_parser.content_parser import _parse_one_token
+
 
 def is_valid_array(
     json_str: str, schema: ArrayJsonSchema, state: IterativeParserResult
 ) -> IterativeParserResult:
+    from json_schema_logits_processor.iterative_parser.content_parser import _parse_one_token
     while state.string_index < len(json_str):
         char = json_str[state.string_index]
 
