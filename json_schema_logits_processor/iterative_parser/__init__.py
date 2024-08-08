@@ -6,10 +6,12 @@ from json_schema_logits_processor.iterative_parser.object_parser import \
     is_valid_object
 from json_schema_logits_processor.iterative_parser.string_parser import \
     is_valid_string
+from json_schema_logits_processor.iterative_parser.array_parser import \
+    is_valid_array
 from json_schema_logits_processor.iterative_parser.types import \
     IterativeParserResult
 from json_schema_logits_processor.schema.interative_schema import (
-    EnumJsonSchema, JsonSchema, ObjectJsonSchema, SchemaId, StringJsonSchema)
+    EnumJsonSchema, JsonSchema, ObjectJsonSchema, SchemaId, StringJsonSchema, ArrayJsonSchema)
 
 
 def parse_partial_json_value(
@@ -78,5 +80,7 @@ def _parse_one_token(
             return is_valid_object(json_str, curr_schema, state)
         case EnumJsonSchema():
             return is_valid_enum(json_str, curr_schema, state)
+        case ArrayJsonSchema():
+            return is_valid_array(json_str, curr_schema, state)
         case default:
             raise ValueError(f"Unknown schema type {default}")

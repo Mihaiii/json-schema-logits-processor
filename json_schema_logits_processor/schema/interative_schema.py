@@ -50,9 +50,18 @@ class ObjectJsonSchema:
     def __hash__(self):
         return self.id
 
+@dataclass
+class ArrayJsonSchema:
+    type = SchemaType.ARRAY
+    id: SchemaId
+    parent_id: SchemaId | None
+    items: SchemaId
+
+    def __hash__(self):
+        return self.id
 
 JsonSchemaUnion = (
-    ObjectJsonSchema | StringJsonSchema | NumberJsonSchema | EnumJsonSchema
+    ObjectJsonSchema | StringJsonSchema | NumberJsonSchema | EnumJsonSchema | ArrayJsonSchema
 )
 
 
@@ -117,6 +126,9 @@ class JsonSchemaParser:
                 return NumberJsonSchema(id=schema_id, parent_id=parent_id)
             case {"type": "enum", "values": values}:
                 return EnumJsonSchema(values=values, id=schema_id, parent_id=parent_id)
+            case {"type": "array", "items": items}:
+                items_schema_id = self._parse_schema_from_dict(items, schema_id)[1]
+                return ArrayJsonSchema(id=schema_id, parent_id=parent_id, items=items_schema_id)
             case other:
                 raise NotImplementedError(f"schema type {other} not implemented")
 
